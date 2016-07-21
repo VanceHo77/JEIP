@@ -1,0 +1,17 @@
+--建立表格:附件明細
+CREATE TABLE AnnAtaDetail (
+  annid integer references announcementheader(annid),--相依的系統公告ID
+  seqno integer NOT NULL,--附件序號(流水號)
+  atatype character(1) NOT NULL,--附件類型;0:超連結,1:附件
+  atafilename character varying(500) NOT NULL,--附件名稱
+  moduserid integer NOT NULL,--異動人員
+  modtime timestamp with time zone,--異動時間
+  cretime timestamp with time zone,--建立時間
+  CONSTRAINT AnnAtaDetail_pkey PRIMARY KEY (annid,seqno)
+)
+
+WITH ( OIDS=FALSE
+);
+
+
+ALTER TABLE AnnAtaDetail OWNER TO vance;

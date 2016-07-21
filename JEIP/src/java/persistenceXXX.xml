@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence">
+  <persistence-unit name="userHeaderPersistenceUnit" transaction-type="RESOURCE_LOCAL">
+    <!-- 顯示列出實體類，在Java SE的環境中應該顯示列出（可選） -->
+    <!--<class>com.model.userheader.UserHeaderVO</class>-->
+    <!-- 聲明是否掃描JAR文件中標註了@Enity類加入到上下文。若不掃描，則如下:(可選），反之，若未設定則自動掃描 -->
+    <!--<exclude-unlisted-classes/>-->
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <properties>
+      <!-- 自動輸出模式創建DDL語句值的值可以是create-drop / create / update，值得注意的是create-drop他會在session關閉後刪除所有表開啟式再創建 
+            <property name="hibernate.hbm2ddl.auto" value="update" /> 
+            -->
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/KM"/>
+      <property name="javax.persistence.jdbc.user" value="vance"/>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="gn951753"/>
+    </properties>
+  </persistence-unit>
+</persistence>

@@ -1,0 +1,18 @@
+--建立表格:單位
+CREATE TABLE depHeader (
+  
+
+  depid character(2) NOT NULL,--單位ID
+  depname character varying(50) NOT NULL,--單位名稱
+  unitlevel integer NOT NULL,--單位層級
+  moduserid integer NOT NULL,--異動人員
+  modtime timestamp with time zone,--異動時間
+  cretime timestamp with time zone,--建立時間
+  CONSTRAINT department_pkey PRIMARY KEY (depid)
+)
+
+WITH ( OIDS=FALSE
+);
+
+
+ALTER TABLE depHeader OWNER TO vance;

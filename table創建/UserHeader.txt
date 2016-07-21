@@ -1,0 +1,28 @@
+--建立序列表
+CREATE SEQUENCE userheader_seq;
+ALTER TABLE userheader_seq
+  OWNER TO vance;
+
+--建立表格:使用者
+CREATE TABLE userheader
+(
+  userid integer primary key default nextval('userheader_seq'),--使用者代碼PK
+  username character varying(20) NOT NULL,--使用者名稱
+  account character varying(128) NOT NULL,--使用者帳號
+  password character varying(160) NOT NULL,--使用者密碼
+  email character varying(128) NOT NULL,--Email
+  depid character(2) references depheader(depid),--使用者所屬單位ID
+  userlevel character varying(1) NOT NULL,--使用者權限
+  openauth character varying(1) NOT NULL,--是否開通帳號, Y:開通, N:未開通
+  authcode character varying(32) NOT NULL,--驗證碼
+  photo bytea,--個人照
+  moduserid integer,--異動人員
+  modtime timestamp with time zone NOT NULL,--異動時間
+  cretime timestamp with time zone NOT NULL--建立時間
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE userheader
+  OWNER TO vance;
+ALTER SEQUENCE userheader_seq OWNED BY userheader.userid

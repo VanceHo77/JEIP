@@ -1,0 +1,15 @@
+--建立表格:系統新增使用者自動取號
+CREATE TABLE autouseraccount(
+  
+  userid integer primary key default nextval('userheader_seq'),--使用者代碼PK
+  account character varying(8) null ,--系統預設帳號
+  moduserid integer NOT NULL,--異動人員
+  modtime timestamp with time zone,--異動時間
+  cretime timestamp with time zone--建立時間
+)
+
+WITH ( OIDS=FALSE
+);
+
+
+ALTER TABLE autouseraccount OWNER TO vance;

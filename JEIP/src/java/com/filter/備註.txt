@@ -1,0 +1,9 @@
+當多個 Filter 的 urlPatterns 的過濾路徑相同時，以程式的命名為執行的優先順序
+
+例如有兩個 Filter的設定如下：
+
+A_Filter 的 urlPatterns = {"/*"}
+
+B_Filter 的 urlPatterns = {"/*"}
+
+此時，A_Filter 會先被執行

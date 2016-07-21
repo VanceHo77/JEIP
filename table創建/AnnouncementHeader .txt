@@ -1,0 +1,24 @@
+--建立序列表
+CREATE SEQUENCE announcementheader_seq;
+ALTER TABLE announcementheader_seq
+  OWNER TO vance;
+
+--建立表格:系統公告
+CREATE TABLE AnnouncementHeader (
+  
+  annid integer primary key default nextval('announcementheader_seq'),--流水號PK
+  begtime character varying(18) NOT NULL,--公告開始日期
+  endTime character varying(18) NOT NULL,--公告結束日期
+  announcementdesc character varying(500) NOT NULL,--公告內容
+  moduserid integer NOT NULL,--異動人員ID
+  modtime timestamp with time zone,--異動時間
+  cretime timestamp with time zone--建立時間
+)
+
+WITH ( OIDS=FALSE
+);
+
+
+ALTER TABLE AnnouncementHeader OWNER TO vance;
+
+ALTER SEQUENCE announcementheader_seq OWNED BY AnnouncementHeader.annID

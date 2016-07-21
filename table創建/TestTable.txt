@@ -1,0 +1,16 @@
+CREATE TABLE testtable
+(
+  
+
+  testid integer primary key not null ,
+  userid integer references userheader(userid)
+
+  testnam character varying(20) NOT NULL,
+)
+
+WITH ( OIDS=FALSE
+);
+
+
+ALTER TABLE testtable
+  OWNER TO vance;

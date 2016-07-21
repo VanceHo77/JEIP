@@ -1,0 +1,40 @@
+Select * Into TEMPORARY UserHeader_temp From UserHeader;
+
+Drop Table UserHeader CASCADE;
+
+CREATE SEQUENCE userheader_seq;
+ALTER TABLE userheader_seq
+OWNER TO vance;
+
+ALTER SEQUENCE userheader_seq RESTART WITH 6;
+
+CREATE TABLE userheader
+(
+  userid integer primary key default nextval('userheader_seq'),
+  username character varying(20) NOT NULL,
+  account character varying(128) NOT NULL,
+  password character varying(160) NOT NULL,
+  email character varying(128) NOT NULL,
+  depid character(2) references depheader(depid),
+  userlevel character varying(1) NOT NULL,
+  openauth character varying(1) NOT NULL,
+  authcode character varying(32) NOT NULL,
+  photo bytea,
+  moduserid integer NOT NULL,
+  modtime timestamp with time zone NOT NULL,
+  cretime timestamp with time zone NOT NULL
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE userheader
+  OWNER TO vance;
+ALTER SEQUENCE userheader_seq OWNED BY userheader.userid
+
+
+Insert Into userheader (userid, username, account, password, email, depid, userlevel, openauth, authcode, photo, moduserid, modtime, cretime)
+Select
+	userid, username, account, password, email, depid, userlevel, openauth, authcode, photo, 1, modtime, cretime
+From UserHeader_temp;
+
+Drop Table UserHeader_temp;
