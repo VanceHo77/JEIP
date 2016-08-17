@@ -1,5 +1,6 @@
 package com.model.annatadetail;
 
+import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,7 @@ public class AnnAtaDetailService implements AnnAtaDetailServiceInterface {
             getAnnAtaDetailDao().insert(annAtaDetail);
         } catch (Exception ex) {
             flag = false;
-            log.error("新增附件[" + annAtaDetail.getAtaFileName()+ "]時發生錯誤。", ex);
+            log.error("新增附件[" + annAtaDetail.getAtaFileName() + "]時發生錯誤。", ex);
         }
         return flag;
     }
@@ -63,7 +64,7 @@ public class AnnAtaDetailService implements AnnAtaDetailServiceInterface {
             getAnnAtaDetailDao().update(annAtaDetail);
         } catch (Exception ex) {
             flag = false;
-            log.error("更新附件[" + annAtaDetail.getAtaFileName()+ "]時發生錯誤。", ex);
+            log.error("更新附件[" + annAtaDetail.getAtaFileName() + "]時發生錯誤。", ex);
         }
         return flag;
     }
@@ -92,11 +93,12 @@ public class AnnAtaDetailService implements AnnAtaDetailServiceInterface {
      * @return
      */
     @Override
-    public AnnAtaDetail findByOne(AnnAtaDetail annAtaDetail) {
-        AnnAtaDetail rtnAnnAtaDetail = null;
+    public List<AnnAtaDetail> findAnnAtaDetails(AnnAtaDetail annAtaDetail) {
+        List<AnnAtaDetail> rtnAnnAtaDetail = null;
         try {
-            rtnAnnAtaDetail = getAnnAtaDetailDao().findByOne(annAtaDetail);
+            rtnAnnAtaDetail = getAnnAtaDetailDao().findAnnAtaDetails(annAtaDetail);
         } catch (Exception ex) {
+            throw ex;
         }
         return rtnAnnAtaDetail;
     }

@@ -1,11 +1,15 @@
 package com.model.userheader;
 
-import com.model.depheader.DepHeader;
 import java.util.List;
+import javax.persistence.EntityExistsException;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockTimeoutException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PessimisticLockException;
 import javax.persistence.Query;
+import javax.persistence.QueryTimeoutException;
+import javax.persistence.TransactionRequiredException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -55,7 +59,7 @@ public class UserHeaderDao {
     public void insert(UserHeader userHeader) {
         try {
             entityManager.persist(userHeader);
-        } catch (Exception e) {
+        } catch (EntityExistsException | TransactionRequiredException e) {
             throw e;
         }
     }
@@ -69,7 +73,7 @@ public class UserHeaderDao {
     public void update(UserHeader userHeader) {
         try {
             entityManager.merge(userHeader);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | TransactionRequiredException e) {
             throw e;
         }
     }
@@ -82,7 +86,7 @@ public class UserHeaderDao {
     public void remove(UserHeader userHeader) {
         try {
             entityManager.remove(entityManager.merge(userHeader));
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | TransactionRequiredException e) {
             throw e;
         }
     }
@@ -136,12 +140,11 @@ public class UserHeaderDao {
                 query.setParameter("depHeader", userHeader.getDepHeader());
             }
             userHeader = (UserHeader) query.getSingleResult();
-        } catch (Exception e) {
+        } catch (IllegalStateException | QueryTimeoutException | TransactionRequiredException | PessimisticLockException | LockTimeoutException e) {
             throw e;
         }
         return userHeader;
     }
-
 
     /**
      * 查詢全部
@@ -153,7 +156,7 @@ public class UserHeaderDao {
         try {
             Query query = entityManager.createQuery("Select u From UserHeader u Left Join u.depHeader d  Order By u.account DESC");
             userHeaders = query.getResultList();
-        } catch (Exception e) {
+        } catch (QueryTimeoutException | TransactionRequiredException | LockTimeoutException | PessimisticLockException e) {
             throw e;
         }
         return userHeaders;

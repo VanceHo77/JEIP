@@ -193,7 +193,46 @@
                         }]
                 });
             });
-        });
+
+        <%-- WebSocket連線 --%>
+            var ws = new WebSocket("ws://localhost:8081/JEIP/NewAnn/echo");
+            ws.onopen = function () {};
+
+            ws.onmessage = function (evt) {
+                var msg = evt.data;
+                if (msg != null) {
+                    $("#hrefBell").css("color", "red");
+                    heightlinght("on", "flash");
+                }
+            };
+
+            ws.onclose = function (evt) {
+                ws.close();
+            };
+
+            ws.onerror = function (evt) {
+                console.log("WebSocket連線發生錯誤！");
+                console.log("錯誤訊息：" + evt.data);
+            };
+        });//end_ready
+        <%-- 讓鈴鐺的背景色一閃一閃亮晶晶 --%>
+        function heightlinght(power, status) {
+            if ("on" == power) {
+                if ("flash" == status) {
+                    $("#hrefBell").parent().css("background-color", "#E6E6E6");
+                    setTimeout(function () {
+                        heightlinght("on", "nonflash");
+                    }, 1000);
+                } else {
+                    $("#hrefBell").parent().css("background-color", "");
+                    setTimeout(function () {
+                        heightlinght("on", "flash");
+                    }, 1000);
+                }
+            } else {
+                $("#hrefBell").parent().css("background-color", "#E6E6E6");
+            }
+        }
     </script>
     <body class=" col-xs-offset-0 col-xs-12  col-md-offset-1 col-md-10" style="border-left-style:groove;border-right-style:groove;border-color:#def;padding-bottom:15px;">
         <%-- jsp程式碼集中區 --%>
@@ -229,7 +268,7 @@
 
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <a id="hrefBell" class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-alerts">

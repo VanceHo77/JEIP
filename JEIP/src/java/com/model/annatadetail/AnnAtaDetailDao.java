@@ -1,8 +1,14 @@
 package com.model.annatadetail;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.LockTimeoutException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PessimisticLockException;
 import javax.persistence.Query;
+import javax.persistence.QueryTimeoutException;
+import javax.persistence.TransactionRequiredException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -78,51 +84,43 @@ public class AnnAtaDetailDao {
     }
 
     /**
-     * 使用annAtaDetail查詢單一附件
+     * 使用AnnAtaDetail查詢
      *
      * @param annAtaDetail
      * @return
      */
-    public AnnAtaDetail findByOne(AnnAtaDetail annAtaDetail) {
-        String queryStr = "Select t From AnnAtaDetail t";
+    public List<AnnAtaDetail> findAnnAtaDetails(AnnAtaDetail annAtaDetail) {
+        String queryStr = "Select t From AnnAtaDetail t ";
         String subStr = "";
+        List<AnnAtaDetail> list = new ArrayList<>();
         try {
-
-////            if (annAtaDetail.getAnnID() > 0) {
-////                subStr += " and t.annID = :annID";
-////            }
-////            if (annAtaDetail.getSeqNO() > 0) {
-////                subStr += " and t.seqNO = :seqNO";
-////            }
-////            if (!annAtaDetail.getAtaType().isEmpty()) {
-////                subStr += " and t.ataType = :ataType";
-////            }
-////            if (annAtaDetail.getAtaFileName() != null) {
-////                subStr += " and t.ataFileName = :ataFileName";
-////            }
-////            if (!subStr.isEmpty()) {
-////                subStr = subStr.substring(5, subStr.length());
-////            }
-////            queryStr += " Where " + subStr;
-////            Query query = entityManager.createQuery(queryStr);
-////
-////            if (annAtaDetail.getAnnID() > 0) {
-////                query.setParameter("annID", annAtaDetail.getAnnID());
-////            }
-////            if (annAtaDetail.getSeqNO() > 0) {
-////                query.setParameter("seqNO", annAtaDetail.getSeqNO());
-////            }
-//            if (!annAtaDetail.getAtaType().isEmpty()) {
-//                query.setParameter("ataType", annAtaDetail.getAtaType());
-//            }
-//            if (!annAtaDetail.getAtaFileName().isEmpty()) {
-//                subStr += "t.ataFileName = :ataFileName";
-//                query.setParameter("ataFileName", annAtaDetail.getAtaFileName());
-//            }
-//            annAtaDetail = (AnnAtaDetail) query.getSingleResult();
-        } catch (Exception e) {
+            if (annAtaDetail.getAnnID() > 0) {
+                subStr += " and t.annID = :annID";
+            }
+            if (annAtaDetail.getSeqNO() > 0) {
+                subStr += " and t.seqNO = :seqNO";
+            }
+            if (!annAtaDetail.getAtaFileName().isEmpty()) {
+                subStr += " and t.ataFileName = :ataFileName";
+            }
+            if (!subStr.isEmpty()) {
+                subStr = subStr.substring(5, subStr.length());
+            }
+            queryStr += " Where " + subStr + " Order By seqNO";
+            Query query = entityManager.createQuery(queryStr);
+            if (annAtaDetail.getAnnID() > 0) {
+                query.setParameter("annID", annAtaDetail.getAnnID());
+            }
+            if (annAtaDetail.getSeqNO() > 0) {
+                query.setParameter("seqNO", annAtaDetail.getSeqNO());
+            }
+            if (!annAtaDetail.getAtaFileName().isEmpty()) {
+                query.setParameter("ataFileName", annAtaDetail.getAtaFileName());
+            }
+            list = query.getResultList();
+        } catch (IllegalStateException | QueryTimeoutException | TransactionRequiredException | PessimisticLockException | LockTimeoutException e) {
             throw e;
         }
-        return annAtaDetail;
+        return list;
     }
 }

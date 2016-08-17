@@ -16,6 +16,7 @@
     <%final String contextP = request.getContextPath();%>
     <script>
         $(document).ready(function () {
+            fileNameAry = [];//存檔名
             getBrowse();
             $("#btnAddAnn").click(addAnn);
         });
@@ -36,7 +37,7 @@
                 var annid;
                 $('#form').myDataGrid(jsonText, {
                     "aoColumnDefs": [//欄位的預設值
-                        {'bSortable': false, 'aTargets': [0,5]}, //設定不具有排序功能的欄位
+                        {'bSortable': false, 'aTargets': [0, 5]}, //設定不具有排序功能的欄位
                         {"bVisible": false, "aTargets": [1]}, //設定隱藏欄位
                         {"width": "5%", "targets": [0]},
                         {"width": "60%", "targets": [2]}
@@ -66,7 +67,7 @@
         <%-- 新增使用者畫面 --%>
         function addAnn() {
             BootstrapDialog.show({
-                title: '新&nbsp;增&nbsp;單&nbsp;位',
+                title: '新&nbsp;增&nbsp;系&nbsp;統&nbsp;公&nbsp;告',
                 message: $('<div></div>').load('<%=contextP%>/System/AnnManager/new'),
                 buttons: [{
                         label: '存檔',
@@ -101,7 +102,7 @@
             }
             dig.close();
         <%-- 有上傳附件才檢查AP暫存檔 --%>
-            if ($("#ataFileTable tbody tr").length != 0) {
+            if ($("#sltAtaType").val() == "F" && $("#ataFileTable tbody tr").length != 0) {
                 try {
                     chkAtaFile();
                 } catch (errorStatus) {
@@ -116,7 +117,7 @@
                 url: "<%=contextP%>/System/AnnManager?" + doWhat,
                 type: "post",
                 dataType: "json",
-                data: $("#formAddAnn").serialize(),
+                data: $("#formAddAnn").serialize() + "&fileNames=" + fileNameAry,
                 beforeSend: function () {
                     $(window).block({message: "存檔中，請稍後..."});
                 },

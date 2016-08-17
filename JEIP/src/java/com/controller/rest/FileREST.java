@@ -11,26 +11,20 @@ import com.filetransfer.CreateFilePath;
 import com.google.gson.JsonObject;
 import com.model.userheader.UserHeader;
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
+import java.net.URLEncoder;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -44,9 +38,11 @@ public class FileREST {
     /**
      * 檢查AP暫存檔是否存在
      *
-     * @param postURL
-     * @param filebytes
+     * @param session
+     * @param req
+     * @param ataType
      * @return
+     * @throws java.lang.Exception
      */
     @RequestMapping(value = "/file/isAPTempFileExists", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public String isAPTempFileExists(HttpSession session, HttpServletRequest req, @RequestParam("ataType") String ataType) throws Exception {
@@ -64,7 +60,7 @@ public class FileREST {
             //建立AP暫存檔路徑物件
             Path tempPath = new CreateFilePath().GetAPTempPath(
                     req.getSession().getServletContext().getRealPath("/resources/temp"),
-                    LOGININFO, AtaTypeEnum);
+                    LOGININFO, AtaTypeEnum, "", "");
             //檢查是否有上傳附件
             File books = new File(tempPath.toString());
             if (books.listFiles().length == 0) {
@@ -77,52 +73,37 @@ public class FileREST {
         return jsonObj.toString();
     }
 
+    
+
     /**
-     * 檔案上傳
+     * 檔案下載
      *
-     * @param postURL
-     * @param filebytes
-     * @return
+     * @param session
+     * @param req
+     * @param rps
+     * @throws java.io.UnsupportedEncodingException
      */
-    @RequestMapping(value = "/file/fileupload", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public String upload(HttpSession session, HttpServletRequest req, String postURL, byte[] filebytes) throws UnsupportedEncodingException {
+    @RequestMapping(value = "/file/doDownload", method = RequestMethod.POST, produces = "application/octet-stream;charset=UTF-8")
+    public void doDownload(HttpSession session, HttpServletRequest req, HttpServletResponse rps) throws UnsupportedEncodingException, Exception {
         //取得使用者資訊
         UserHeader LOGININFO = ((UserHeader) session.getAttribute("LoginInfo"));
-        JsonObject jsonObj = new JsonObject();
-        CloseableHttpClient httpClient = null;
-        CloseableHttpResponse response = null;
-        httpClient = HttpClients.createDefault();
-//        //負責處理上傳的servlet
-//        HttpPost httpPost = new HttpPost(session.getServletContext() + "/file/fileUploadToServer");
-//        // 把文件轉換成流對象FileBody
-//        FileBody bin = new FileBody(new File("C:/log.txt"));
-//        Path tempPath = new CreateFilePath().GetAPTempPath(
-//                req.getSession().getServletContext().getRealPath("/resources/temp"),
-//                LOGININFO, AtaTypeEnum);
-//
-//        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-//        builder.addBinaryBody("file", bin);
-//        httpPost.setEntity(builder.build());
-//
-//        httpPost.setEntity(reqEntity);
-//
-//        // 發起請求並返回請求的響應
-//        response = httpClient.execute(httpPost);
-//
-//        System.out.println("The response value of token:" + response.getFirstHeader("token"));
-//
-//        // 獲取響應對象
-//        HttpEntity resEntity = response.getEntity();
-//        if (resEntity != null) {
-//            // 打印響應長度
-//            System.out.println("Response content length: " + resEntity.getContentLength());
-//            // 打印響應內容
-//            System.out.println(EntityUtils.toString(resEntity, Charset.forName("UTF-8")));
-//        }
-//
-//        // 銷毀
-//        EntityUtils.consume(resEntity);
+        String annID = req.getParameter("annID");
+        String fileName = req.getParameter("fileName");
+        String ataType = req.getParameter("ataType");
 
-        return jsonObj.toString();
+        try {
+            //建立AtaFile目錄
+            Path tempPath = new CreateFilePath().GetAtaFilePath(LOGININFO, AtaType.表單, annID, fileName);
+
+            byte[] data = Files.readAllBytes(tempPath);
+
+            rps.setHeader("content-disposition", "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
+            try (ServletOutputStream out = rps.getOutputStream()) {
+                out.write(data, 0, data.length);
+                out.flush();
+            }
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }

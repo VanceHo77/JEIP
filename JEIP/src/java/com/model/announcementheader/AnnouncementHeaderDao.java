@@ -1,11 +1,15 @@
 package com.model.announcementheader;
 
-import com.model.annatadetail.AnnAtaCompositeID;
 import java.util.List;
+import javax.persistence.EntityExistsException;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockTimeoutException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PessimisticLockException;
 import javax.persistence.Query;
+import javax.persistence.QueryTimeoutException;
+import javax.persistence.TransactionRequiredException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -47,7 +51,7 @@ public class AnnouncementHeaderDao {
     public void insert(AnnouncementHeader anouncementHeader) {
         try {
             entityManager.persist(anouncementHeader);
-        } catch (Exception e) {
+        } catch (EntityExistsException | TransactionRequiredException e) {
             throw e;
         }
     }
@@ -56,13 +60,14 @@ public class AnnouncementHeaderDao {
      * 新增並回傳ID
      *
      * @param anouncementHeader
+     * @return
      */
     @Transactional
     public Integer insertAndGetID(AnnouncementHeader anouncementHeader) {
         try {
             entityManager.persist(anouncementHeader);
             entityManager.flush();
-        } catch (Exception e) {
+        } catch (EntityExistsException | TransactionRequiredException e) {
             throw e;
         }
         return anouncementHeader.getAnnID();
@@ -77,7 +82,7 @@ public class AnnouncementHeaderDao {
     public void update(AnnouncementHeader anouncementHeader) {
         try {
             entityManager.merge(anouncementHeader);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | TransactionRequiredException e) {
             throw e;
         }
     }
@@ -90,7 +95,7 @@ public class AnnouncementHeaderDao {
     public void remove(AnnouncementHeader anouncementHeader) {
         try {
             entityManager.remove(entityManager.merge(anouncementHeader));
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | TransactionRequiredException e) {
             throw e;
         }
     }
@@ -152,7 +157,7 @@ public class AnnouncementHeaderDao {
         try {
             Query query = entityManager.createQuery("Select a From AnnouncementHeader a Order By a.begTime DESC");
             anouncementHeaders = query.getResultList();
-        } catch (Exception e) {
+        } catch (QueryTimeoutException | TransactionRequiredException | LockTimeoutException | PessimisticLockException e) {
             throw e;
         }
         return anouncementHeaders;
@@ -180,7 +185,7 @@ public class AnnouncementHeaderDao {
                 query.setParameter("begTime", begTime);
             }
             anouncementHeaders = query.getResultList();
-        } catch (Exception e) {
+        } catch (IllegalStateException | QueryTimeoutException | TransactionRequiredException | PessimisticLockException | LockTimeoutException e) {
             throw e;
         }
         return anouncementHeaders;

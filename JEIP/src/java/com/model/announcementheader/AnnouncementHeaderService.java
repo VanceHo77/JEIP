@@ -61,7 +61,7 @@ public class AnnouncementHeaderService implements AnnouncementHeaderServiceInter
     public Integer addAnnAndGetID(AnnouncementHeader announcementHeader) {
         Integer id = -1;
         try {
-            getAnnouncementHeaderDao().insertAndGetID(announcementHeader);
+            id = getAnnouncementHeaderDao().insertAndGetID(announcementHeader);
         } catch (Exception ex) {
             log.error("新增公告[" + announcementHeader.getAnnouncementDesc() + "]時發生錯誤。", ex);
         }

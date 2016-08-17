@@ -9,8 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
@@ -26,6 +24,7 @@ public class AnnouncementHeader implements Serializable {
     @GeneratedValue(generator = "announcementheader_seq")
     @SequenceGenerator(name = "announcementheader_seq", sequenceName = "announcementheader_seq", allocationSize = 1)
     private Integer annID;
+    private String ataType = "";
     private String begTime = "";
     private String endTime = "";
     private String announcementDesc = "";
@@ -33,8 +32,9 @@ public class AnnouncementHeader implements Serializable {
     private Timestamp modTime;
     private Timestamp creTime;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "annID", referencedColumnName = "annID")
+    @OneToMany(mappedBy="announcementHeader", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    //原本使用JoinColumn的方式join Detail的資料，但是在級聯刪除時會有annID=null的問題
+//    @JoinColumn(name = "annID", referencedColumnName = "annID")
     private List<AnnAtaDetail> annAtaDetails;
 
     public Integer getAnnID() {
@@ -59,6 +59,14 @@ public class AnnouncementHeader implements Serializable {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public String getAtaType() {
+        return ataType;
+    }
+
+    public void setAtaType(String ataType) {
+        this.ataType = ataType;
     }
 
     public String getAnnouncementDesc() {
@@ -103,6 +111,7 @@ public class AnnouncementHeader implements Serializable {
 
     @Override
     public String toString() {
-        return "AnnouncementHeader{" + "annID=" + annID + ", begTime=" + begTime + ", endTime=" + endTime + ", announcementDesc=" + announcementDesc + ", modUserID=" + modUserID + ", modTime=" + modTime + ", creTime=" + creTime + ", annAtaDetails=" + annAtaDetails + '}';
+        return "AnnouncementHeader{" + "annID=" + annID + ", ataType=" + ataType + ", begTime=" + begTime + ", endTime=" + endTime + ", announcementDesc=" + announcementDesc + ", modUserID=" + modUserID + ", modTime=" + modTime + ", creTime=" + creTime + ", annAtaDetails=" + annAtaDetails + '}';
     }
+
 }

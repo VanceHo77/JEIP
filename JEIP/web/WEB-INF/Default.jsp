@@ -24,13 +24,10 @@
 
         });
 
-        function showNewMsgDetail(desc, begTime, endTime) {
-            desc = escape(encodeURIComponent(desc));
-            begTime = escape(encodeURIComponent(begTime));
-            endTime = escape(encodeURIComponent(endTime));
+        function showNewMsgDetail(annid, begTime, endTime) {
             BootstrapDialog.show({
                 title: '最&nbsp;新&nbsp;公&nbsp;告',
-                message: $('<div></div>').load('<%=contextP%>/Dialog/NewAnnouncement?desc=' + desc + "&begTime=" + begTime + "&endTime=" + endTime)
+                message: $('<div></div>').load('<%=contextP%>/Dialog/NewAnnouncement?annid=' + annid)
             });
         }
     </script>
@@ -56,11 +53,11 @@
                                     <div class="col-md-1" style="width:1%;"><span class="glyphicon glyphicon-star pull-left" aria-hidden="true" style="padding-top:3px;"></span></div><%-- 公告訊息前面的icon --%>
                                     <div class="col-md-11">
                                         <c:if test="${fn:length(newAnnMsg.announcementDesc)>27}" ><%-- 公告內容長度>38個字，則隱藏後面的訊息 --%>
-                                            <a href="#" onclick="showNewMsgDetail('${newAnnMsg.announcementDesc}', '${newAnnMsg.begTime}', '${newAnnMsg.endTime}')">
+                                            <a href="#" onclick="showNewMsgDetail('${newAnnMsg.annID}')">
                                                 ${newAnnMsg.begTime.substring(0,9)}&nbsp;&nbsp;${newAnnMsg.announcementDesc.substring(0,27)}......more</a>
                                             </c:if>
                                             <c:if test="${fn:length(newAnnMsg.announcementDesc)<=27}" ><%-- 公告內容長度<=38個字 --%>
-                                            <a  href="#" onclick="showNewMsgDetail('${newAnnMsg.announcementDesc}', '${newAnnMsg.begTime}', '${newAnnMsg.endTime}')">
+                                            <a  href="#" onclick="showNewMsgDetail('${newAnnMsg.annID}')">
                                                 ${newAnnMsg.begTime.substring(0,9)}&nbsp;&nbsp;${newAnnMsg.announcementDesc}</a>
                                             </c:if>
                                     </div>

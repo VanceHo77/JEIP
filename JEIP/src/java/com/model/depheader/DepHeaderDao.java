@@ -2,10 +2,15 @@ package com.model.depheader;
 
 import com.model.userheader.*;
 import java.util.List;
+import javax.persistence.EntityExistsException;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockTimeoutException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PessimisticLockException;
 import javax.persistence.Query;
+import javax.persistence.QueryTimeoutException;
+import javax.persistence.TransactionRequiredException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -47,7 +52,7 @@ public class DepHeaderDao {
     public void insert(DepHeader depHeader) {
         try {
             entityManager.persist(depHeader);
-        } catch (Exception e) {
+        } catch (EntityExistsException | TransactionRequiredException e) {
             throw e;
         }
     }
@@ -61,7 +66,7 @@ public class DepHeaderDao {
     public void update(DepHeader depHeader) {
         try {
             entityManager.merge(depHeader);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | TransactionRequiredException e) {
             throw e;
         }
     }
@@ -74,7 +79,7 @@ public class DepHeaderDao {
     public void remove(DepHeader depHeader) {
         try {
             entityManager.remove(entityManager.merge(depHeader));
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | TransactionRequiredException e) {
             throw e;
         }
     }
@@ -115,7 +120,7 @@ public class DepHeaderDao {
                 query.setParameter("unitLevel", depHeader.getUnitLevel());
             }
             depHeader = (DepHeader) query.getSingleResult();
-        } catch (Exception e) {
+        } catch (IllegalStateException | QueryTimeoutException | TransactionRequiredException | PessimisticLockException | LockTimeoutException e) {
             throw e;
         }
         return depHeader;
@@ -131,7 +136,7 @@ public class DepHeaderDao {
         try {
             Query query = entityManager.createQuery("Select d from DepHeader d Order By d.depID");
             depHeaders = query.getResultList();
-        } catch (Exception e) {
+        } catch (QueryTimeoutException | TransactionRequiredException | LockTimeoutException | PessimisticLockException e) {
             throw e;
         }
         return depHeaders;

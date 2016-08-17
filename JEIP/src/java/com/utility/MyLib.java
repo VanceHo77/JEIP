@@ -50,7 +50,7 @@ public class MyLib {
     public static String sysDate() {
         Timestamp sysTime = new Timestamp(System.currentTimeMillis());
         String date = sysTime.toString().split(" ")[0];
-        date = MyLib.sysYear(date)+"/"+MyLib.sysMonth(date)+"/"+MyLib.sysDay(date);
+        date = MyLib.sysYear(date) + "/" + MyLib.sysMonth(date) + "/" + MyLib.sysDay(date);
         return date;
     }
 
@@ -65,10 +65,11 @@ public class MyLib {
         time = time.substring(0, time.lastIndexOf(":"));
         return time;
     }
-    
+
     /**
      * 取得當前系統年度(民國年)
      *
+     * @param date
      * @return "hh/mm"
      */
     public static String sysYear(String date) {
@@ -76,21 +77,25 @@ public class MyLib {
         date = String.valueOf(Integer.parseInt(date) - 1911);
         return date;
     }
-    
+
     /**
      * 取得當前系統月份
      *
+     * @param date
      * @return "hh/mm"
      */
     public static String sysMonth(String date) {
         return date.split("-")[1];
     }
+
     /**
      * 取得當前系統年度(民國年)
      *
+     * @param date
      * @return "hh/mm"
      */
     public static String sysDay(String date) {
         return date.split("-")[2];
     }
+
 }

@@ -1,10 +1,15 @@
 package com.model.annatadetail;
 
+import com.model.announcementheader.AnnouncementHeader;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -15,14 +20,17 @@ import javax.persistence.IdClass;
 public class AnnAtaDetail implements Serializable {
 
     @Id
-    private Integer annID;
+    private Integer annID = -1;
     @Id
-    private Integer seqNO;
-    private String ataType = "";
+    private Integer seqNO = -1;
     private String ataFileName = "";
     private Integer modUserID;
     private Timestamp modtime;
     private Timestamp cretime;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "annID", insertable = false, updatable = false)
+    private AnnouncementHeader announcementHeader;
 
     public Integer getAnnID() {
         return annID;
@@ -38,14 +46,6 @@ public class AnnAtaDetail implements Serializable {
 
     public void setSeqNO(Integer seqNO) {
         this.seqNO = seqNO;
-    }
-
-    public String getAtaType() {
-        return ataType;
-    }
-
-    public void setAtaType(String ataType) {
-        this.ataType = ataType;
     }
 
     public String getAtaFileName() {
@@ -80,9 +80,17 @@ public class AnnAtaDetail implements Serializable {
         this.cretime = cretime;
     }
 
+    public AnnouncementHeader getAnnouncementHeader() {
+        return announcementHeader;
+    }
+
+    public void setAnnouncementHeader(AnnouncementHeader announcementHeader) {
+        this.announcementHeader = announcementHeader;
+    }
+
     @Override
     public String toString() {
-        return "AnnAtaDetail{" + "annID=" + annID + ", seqNO=" + seqNO + ", ataType=" + ataType + ", attFileName=" + ataFileName + ", modUserID=" + modUserID + ", modtime=" + modtime + ", cretime=" + cretime + '}';
+        return "AnnAtaDetail{" + "annID=" + annID + ", seqNO=" + seqNO + ", ataFileName=" + ataFileName + ", modUserID=" + modUserID + ", modtime=" + modtime + ", cretime=" + cretime + ", announcementHeader=" + announcementHeader + '}';
     }
 
 }

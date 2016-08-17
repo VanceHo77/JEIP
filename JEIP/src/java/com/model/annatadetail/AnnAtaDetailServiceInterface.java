@@ -1,6 +1,5 @@
 package com.model.annatadetail;
 
-import com.model.userheader.*;
 import java.util.List;
 
 /**
@@ -40,6 +39,6 @@ public interface AnnAtaDetailServiceInterface {
      * @param annAtaDetail
      * @return
      */
-    public AnnAtaDetail findByOne(AnnAtaDetail annAtaDetail);
+    public List<AnnAtaDetail> findAnnAtaDetails(AnnAtaDetail annAtaDetail);
 
 }

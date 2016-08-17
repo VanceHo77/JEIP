@@ -7,11 +7,10 @@ package com.controller.template;
 
 import com.controller.login.Login;
 import com.exception.MyException;
-import com.factory.ServiceFactory;
+import com.utility.ServiceFactory;
 import com.model.announcementheader.AnnouncementHeader;
 import com.model.announcementheader.AnnouncementHeaderService;
 import com.model.userheader.UserHeader;
-import com.utility.MyLib;
 import java.util.List;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -51,7 +50,7 @@ public class Template extends HttpServlet {
             //取得Service
             AnnouncementHeaderService announcementHeaderService = (AnnouncementHeaderService) ServiceFactory.getService("announcementHeaderService");
 
-            List<AnnouncementHeader> list = announcementHeaderService.findBegTimeBetween(MyLib.sysDateTime());
+            List<AnnouncementHeader> list = announcementHeaderService.findAll();
 
             //最新公告筆數
             model.addAttribute("NewAnnMsgTotal", list.size());

@@ -1,8 +1,13 @@
 package com.model.autouseraccount;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.LockTimeoutException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PessimisticLockException;
 import javax.persistence.Query;
+import javax.persistence.QueryTimeoutException;
+import javax.persistence.TransactionRequiredException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -44,7 +49,7 @@ public class AutoUserAccountDao {
     public void insert(AutoUserAccount autoUserAccount) {
         try {
             entityManager.persist(autoUserAccount);
-        } catch (Exception e) {
+        } catch (EntityExistsException | TransactionRequiredException e) {
             throw e;
         }
     }
@@ -58,7 +63,7 @@ public class AutoUserAccountDao {
     public void update(AutoUserAccount autoUserAccount) {
         try {
             entityManager.merge(autoUserAccount);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | TransactionRequiredException e) {
             throw e;
         }
     }
@@ -71,7 +76,7 @@ public class AutoUserAccountDao {
     public void remove(AutoUserAccount autoUserAccount) {
         try {
             entityManager.remove(entityManager.merge(autoUserAccount));
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | TransactionRequiredException e) {
             throw e;
         }
     }
@@ -88,7 +93,7 @@ public class AutoUserAccountDao {
             Query query = entityManager.createQuery(queryStr);
 
             autoUserAccount = (AutoUserAccount) query.getSingleResult();
-        } catch (Exception e) {
+        } catch (IllegalStateException | QueryTimeoutException | TransactionRequiredException | PessimisticLockException | LockTimeoutException e) {
             throw e;
         }
         return autoUserAccount;
