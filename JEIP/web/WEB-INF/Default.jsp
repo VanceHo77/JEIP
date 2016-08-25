@@ -21,10 +21,17 @@
     </style>
     <script>
         $(document).ready(function () {
-
+            $("#linkMoreDetail").click(showMoreDetail);
         });
 
-        function showNewMsgDetail(annid, begTime, endTime) {
+        function showMoreDetail() {
+            BootstrapDialog.show({
+                title: '最&nbsp;新&nbsp;公&nbsp;告',
+                message: $('<div></div>').load("<%=contextP%>/Dialog/ShowNewAnnDetail")
+            });
+        }
+
+        function showNewMsgDetail(annid) {
             BootstrapDialog.show({
                 title: '最&nbsp;新&nbsp;公&nbsp;告',
                 message: $('<div></div>').load('<%=contextP%>/Dialog/NewAnnouncement?annid=' + annid)
@@ -66,7 +73,7 @@
                                 </c:forEach>
                             </div>
                         </a>
-                        <a href="#">
+                        <a href="#" id="linkMoreDetail">
                             <div class="panel-footer">
                                 <span class="pull-right" algin="right">查看更多<i class="fa fa-arrow-circle-right" style="padding-left:5px;"></i></span>
                                 <div class="clearfix"></div>

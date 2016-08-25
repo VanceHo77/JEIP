@@ -11,6 +11,7 @@ import com.utility.ServiceFactory;
 import com.model.announcementheader.AnnouncementHeader;
 import com.model.announcementheader.AnnouncementHeaderService;
 import com.model.userheader.UserHeader;
+import com.utility.MyLib;
 import java.util.List;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -37,20 +38,21 @@ public class Template extends HttpServlet {
      * 預設登入後的畫面
      *
      * @param session
+     * @param req
      * @param model
      * @return
      * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET)
-    protected String PageLoad(HttpSession session, Model model) throws Exception {
+    protected String PageLoad(HttpSession session, HttpServletRequest req, Model model) throws Exception {
         UserHeader userInfo = (UserHeader) session.getAttribute("LoginInfo");
-        //左側選單
-        session.setAttribute("Menu", userInfo.getUserLevel());
         try {
+            //左側選單
+            session.setAttribute("Menu", Menu.getMenuItems(userInfo.getUserLevel(), req.getContextPath()));
             //取得Service
             AnnouncementHeaderService announcementHeaderService = (AnnouncementHeaderService) ServiceFactory.getService("announcementHeaderService");
 
-            List<AnnouncementHeader> list = announcementHeaderService.findAll();
+            List<AnnouncementHeader> list = announcementHeaderService.findBegTimeBetween(MyLib.sysDate());
 
             //最新公告筆數
             model.addAttribute("NewAnnMsgTotal", list.size());
@@ -61,7 +63,7 @@ public class Template extends HttpServlet {
                 model.addAttribute("NewAnnMsg", list.subList(0, 3));
             }
         } catch (Exception e) {
-            throw new MyException("取得最新公告失敗！");
+            throw e;
         }
         return "Default";
     }

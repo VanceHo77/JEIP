@@ -9,54 +9,68 @@ import java.util.List;
 
 /**
  * AnnouncementHeaderService提供的標準服務介面定義
+ *
  * @author Vance
  */
 public interface AnnouncementHeaderServiceInterface {
 
     /**
      * 新增公告
+     *
      * @param announcementHeader
-     * @return 
+     * @return
      */
     public boolean addAnnouncementHeader(AnnouncementHeader announcementHeader);
-    
+
     /**
      * 新增公告並回傳ID
+     *
      * @param announcementHeader
-     * @return 
+     * @return
      */
     public Integer addAnnAndGetID(AnnouncementHeader announcementHeader);
 
     /**
      * 更新公告
+     *
      * @param announcementHeader
-     * @return 
+     * @return
      */
     public boolean updateAnnouncementHeader(AnnouncementHeader announcementHeader);
 
     /**
      * 刪除公告
+     *
      * @param announcementHeader
-     * @return 
+     * @return
      */
     public boolean deleteAnnouncementHeader(AnnouncementHeader announcementHeader);
-    
+
     /**
      * 使用AnnouncementHeader物件查詢單一公告
+     *
      * @param announcementHeader
      * @return
      */
     public AnnouncementHeader findByOne(AnnouncementHeader announcementHeader);
-    
-    
+
+    /**
+     * 使用查詢條件查詢公告
+     *
+     * @return
+     */
+    public List<AnnouncementHeader> query(AnnouncementHeader announcementHeader);
+
     /**
      * 查詢全部的公告
+     *
      * @return
      */
     public List<AnnouncementHeader> findAll();
-    
+
     /**
      * 查詢Top3
+     *
      * @return
      */
     public List<AnnouncementHeader> findBegTimeBetween(String begTime);

@@ -119,6 +119,21 @@ public class AnnouncementHeaderService implements AnnouncementHeaderServiceInter
     }
 
     /**
+     * 使用查詢條件查詢公告
+     *
+     * @return
+     */
+    @Override
+    public List<AnnouncementHeader> query(AnnouncementHeader announcementHeader) {
+        List<AnnouncementHeader> list = null;
+        try {
+            list = getAnnouncementHeaderDao().query(announcementHeader);
+        } catch (Exception ex) {
+        }
+        return list;
+    }
+
+    /**
      * 查詢全部公告
      *
      * @return

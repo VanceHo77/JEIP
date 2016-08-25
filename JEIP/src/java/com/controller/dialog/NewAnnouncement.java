@@ -11,7 +11,6 @@ import com.model.annatadetail.AnnAtaDetailService;
 import com.model.announcementheader.AnnouncementHeader;
 import com.model.announcementheader.AnnouncementHeaderService;
 import java.io.IOException;
-import java.net.URLDecoder;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -34,9 +33,7 @@ public class NewAnnouncement extends HttpServlet {
      *
      * @param session
      * @param model
-     * @param desc
-     * @param begTime
-     * @param endTime
+     * @param annID
      * @return
      * @throws IOException
      */

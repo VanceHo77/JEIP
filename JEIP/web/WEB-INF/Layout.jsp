@@ -235,24 +235,6 @@
         }
     </script>
     <body class=" col-xs-offset-0 col-xs-12  col-md-offset-1 col-md-10" style="border-left-style:groove;border-right-style:groove;border-color:#def;padding-bottom:15px;">
-        <%-- jsp程式碼集中區 --%>
-        <%
-            String menu = (String) request.getSession().getAttribute("Menu");
-        %>
-        <%!
-            StringBuilder MenuCtrl(String menu, String contextP) {
-                StringBuilder htmlCode = new StringBuilder("");
-                if (menu.equals(UserLevel.系統管理員.getValue())) {
-                    htmlCode.append("<a href='#'><i class='fa fa-wrench fa-fw'></i> 系統管理<span class='fa arrow'></span></a>")
-                            .append("<ul class='nav nav-second-level collapse in' aria-expanded='true'>")
-                            .append("<li> <a href='" + contextP + "/System/UserManager'>使用者設定</a></li>")
-                            .append("<li> <a href='" + contextP + "/System/DepManager'>單位設定</a></li>")
-                            .append("<li> <a href='" + contextP + "/System/AnnManager'>系統公告設定</a></li>")
-                            .append("</ul>");
-                }
-                return htmlCode;
-            }
-        %>
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
@@ -354,7 +336,8 @@
                             <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
                         </li>
                         <li>
-                            <%=MenuCtrl(menu, contextP)%>
+                            <%-- Menu功能選單 --%>
+                            ${Menu}
                         </li>
                     </ul>
                 </div>

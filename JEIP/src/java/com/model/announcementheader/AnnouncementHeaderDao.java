@@ -1,5 +1,6 @@
 package com.model.announcementheader;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityExistsException;
 
@@ -148,6 +149,54 @@ public class AnnouncementHeaderDao {
     }
 
     /**
+     * 使用AnnouncementHeader查詢單一公告
+     *
+     * @param anouncementHeader
+     * @return
+     */
+    public List<AnnouncementHeader> query(AnnouncementHeader anouncementHeader) {
+        String queryStr = "Select a From AnnouncementHeader a";
+        String subStr = "";
+        List<AnnouncementHeader> anouncementHeaders = new ArrayList();
+        try {
+            if (anouncementHeader.getAnnID() != null && anouncementHeader.getAnnID() != -1) {
+                subStr += " and a.annID = :annID";
+            }
+            if (!anouncementHeader.getBegTime().isEmpty()) {
+                subStr += " and a.begTime = :begTime";
+            }
+            if (!anouncementHeader.getEndTime().isEmpty()) {
+                subStr += " and a.endTime = :endTime";
+            }
+            if (!anouncementHeader.getAnnouncementDesc().isEmpty()) {
+                subStr += " and a.announcementDesc = :announcementDesc";
+            }
+            if (!subStr.isEmpty()) {
+                subStr = subStr.substring(5, subStr.length());
+            }
+            queryStr += " Where " + subStr;
+            Query query = entityManager.createQuery(queryStr);
+
+            if (anouncementHeader.getAnnID() != null && anouncementHeader.getAnnID() != -1) {
+                query.setParameter("annID", anouncementHeader.getAnnID());
+            }
+            if (!anouncementHeader.getBegTime().isEmpty()) {
+                query.setParameter("begTime", anouncementHeader.getBegTime());
+            }
+            if (!anouncementHeader.getEndTime().isEmpty()) {
+                query.setParameter("endTime", anouncementHeader.getEndTime());
+            }
+            if (!anouncementHeader.getAnnouncementDesc().isEmpty()) {
+                query.setParameter("announcementDesc", anouncementHeader.getAnnouncementDesc());
+            }
+            anouncementHeaders = query.getResultList();
+        } catch (QueryTimeoutException | TransactionRequiredException | LockTimeoutException | PessimisticLockException e) {
+            throw e;
+        }
+        return anouncementHeaders;
+    }
+
+    /**
      * 查詢全部
      *
      * @return
@@ -166,6 +215,7 @@ public class AnnouncementHeaderDao {
     /**
      * 查詢Top3
      *
+     * @param begTime
      * @return
      */
     public List<AnnouncementHeader> findBegTimeBetween(String begTime) {

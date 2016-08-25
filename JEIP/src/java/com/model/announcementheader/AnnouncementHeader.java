@@ -32,7 +32,7 @@ public class AnnouncementHeader implements Serializable {
     private Timestamp modTime;
     private Timestamp creTime;
 
-    @OneToMany(mappedBy="announcementHeader", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "announcementHeader", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     //原本使用JoinColumn的方式join Detail的資料，但是在級聯刪除時會有annID=null的問題
 //    @JoinColumn(name = "annID", referencedColumnName = "annID")
     private List<AnnAtaDetail> annAtaDetails;
